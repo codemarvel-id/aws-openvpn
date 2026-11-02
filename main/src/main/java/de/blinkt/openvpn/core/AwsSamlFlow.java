@@ -141,8 +141,8 @@ public class AwsSamlFlow {
             }
             boolean ok = saml != null && !saml.isEmpty() && !done;
             String html = ok
-                    ? "<h2>AWSOpenVPN: login diterima.</h2><p>Kembali ke Tryminal / TCatch. Login accepted, you can close this tab.</p>"
-                    : "<h2>AWSOpenVPN</h2><p>Menunggu login SAML. Waiting for the SAML login.</p>";
+                    ? "<h2>AWSOpenVPN: sign-in accepted.</h2><p>The VPN is connecting. You can close this tab and return to your app.</p>"
+                    : "<h2>AWSOpenVPN</h2><p>Waiting for the SAML sign-in.</p>";
             byte[] out = ("<!doctype html><meta charset=utf-8><meta name=viewport content='width=device-width'>"
                     + "<body style='font-family:sans-serif;padding:24px'>" + html + "</body>").getBytes(StandardCharsets.UTF_8);
             OutputStream os = s.getOutputStream();

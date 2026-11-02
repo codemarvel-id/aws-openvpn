@@ -2,7 +2,7 @@
 
 **Created by MR.TRYCATCH @ CODEMARVEL INDONESIA**
 
-AWSOpenVPN is a modified build of [OpenVPN for Android](https://github.com/schwabe/ics-openvpn) (ics-openvpn v0.7.69) for **AWS Client VPN profiles with SAML sign-in (`auth-federate`)**. The sign-in opens in the browser. Android's VpnService then carries the private network to the apps you choose: by default Tiny Container, Termux, Tryminal, Chrome and Edge. Linux environments on an Android tablet can reach the company network this way.
+AWSOpenVPN is a modified build of [OpenVPN for Android](https://github.com/schwabe/ics-openvpn) (ics-openvpn v0.7.69) for **AWS Client VPN profiles with SAML sign-in (`auth-federate`)**. The sign-in opens in the browser. Android's VpnService then carries the private network to the apps you choose: by default Tiny Container, Termux, Chrome and Edge. Linux environments on an Android tablet can reach the company network this way.
 
 The package is `id.tryca.awsopenvpn`, so it installs next to the original OpenVPN for Android. The interface is in English and Indonesian (Settings → App language).
 
