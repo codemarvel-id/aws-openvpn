@@ -714,6 +714,10 @@ public class OpenVpnManagementThread implements Runnable, OpenVPNManagement {
                 pw = mProfile.getPasswordPrivateKey();
                 break;
             case "Auth":
+                if (mProfile.mAwsSaml) {
+                    awsSamlAnswerAuth();
+                    return;
+                }
                 pw = mProfile.getPasswordAuth();
                 username = mProfile.mUsername;
 
@@ -740,7 +744,79 @@ public class OpenVpnManagementThread implements Runnable, OpenVPNManagement {
 
     }
 
+    // AWSOpenVPN: AWS Client VPN SAML (auth-federate), see AwsSamlFlow.
+    private final AwsSamlFlow mAwsSaml = new AwsSamlFlow();
+    private String mAwsSamlPassword;      // CRV1::sid::SAML, used once for the next 'Auth' query
+    private boolean mAwsSamlWaiting;      // waiting for the browser login
+    private boolean mAwsAuthQueryPending; // OpenVPN asked for 'Auth' while we wait
+
+    private synchronized void awsSamlAnswerAuth() {
+        if (mAwsSamlPassword != null) {
+            String pw = mAwsSamlPassword;
+            mAwsSamlPassword = null;
+            sendAwsAuth(pw);
+            VpnStatus.logInfo("AWS SAML: sending the SAML login to the server");
+        } else if (mAwsSamlWaiting) {
+            mAwsAuthQueryPending = true; // answered as soon as the browser login arrives
+        } else {
+            sendAwsAuth(AwsSamlFlow.FIRST_PASSWORD);
+        }
+    }
+
+    private void sendAwsAuth(String pw) {
+        managementCommand(String.format("username 'Auth' %s\n", VpnProfile.openVpnEscape(AwsSamlFlow.USERNAME)));
+        managementCommand(String.format("password 'Auth' %s\n", VpnProfile.openVpnEscape(pw)));
+    }
+
+    private boolean awsSamlChallenge(String args) {
+        String[] crv = AwsSamlFlow.parseCrv1(args);
+        if (crv == null)
+            return false;
+        final String sid = crv[0];
+        final String url = crv[1];
+        synchronized (this) {
+            mAwsSamlWaiting = true;
+            mAwsSamlPassword = null;
+        }
+        try {
+            mAwsSaml.start(sid, new AwsSamlFlow.Listener() {
+                @Override
+                public void onSamlPassword(String password) {
+                    synchronized (OpenVpnManagementThread.this) {
+                        mAwsSamlWaiting = false;
+                        mAwsSamlPassword = password;
+                        if (mAwsAuthQueryPending) {
+                            mAwsAuthQueryPending = false;
+                            awsSamlAnswerAuth();
+                        }
+                    }
+                    mOpenVPNService.awsSamlLoginReceived();
+                }
+
+                @Override
+                public void onSamlFailed(String reason) {
+                    synchronized (OpenVpnManagementThread.this) {
+                        mAwsSamlWaiting = false;
+                    }
+                    VpnStatus.logError("AWS SAML: login not received (" + reason + ")");
+                    mOpenVPNService.awsSamlLoginFailed();
+                }
+            });
+        } catch (IOException e) {
+            synchronized (this) {
+                mAwsSamlWaiting = false;
+            }
+            VpnStatus.logError("AWS SAML: cannot listen on 127.0.0.1:" + AwsSamlFlow.PORT + " (" + e.getMessage() + ")");
+            return false;
+        }
+        VpnStatus.logInfo("AWS SAML: opening the login page in the browser");
+        mOpenVPNService.awsSamlOpenLogin(url);
+        return true;
+    }
+
     private void processPWFailed(String needed, String args) {
+        if (mProfile.mAwsSaml && "Auth".equals(needed) && awsSamlChallenge(args))
+            return;
         VpnStatus.updateStateString("AUTH_FAILED", needed + args, R.string.state_auth_failed, ConnectionStatus.LEVEL_AUTH_FAILED);
     }
 
@@ -878,6 +954,7 @@ public class OpenVpnManagementThread implements Runnable, OpenVPNManagement {
 
     @Override
     public boolean stopVPN(boolean replaceConnection) {
+        mAwsSaml.stop();
         boolean stopSucceed = stopOpenVPN();
         if (stopSucceed) {
             mShuttingDown = true;

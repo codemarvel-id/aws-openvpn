@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Machine-translated (tools/translate_strings.py) and reviewed by hand. -->
+<resources>
+    <string-array name="crm_entries">
+        <item>Tanpa percobaan sambung ulang</item>
+        <item>Satu percobaan sambung ulang</item>
+        <item>Lima percobaan sambung ulang</item>
+        <item>Lima puluh percobaan sambung ulang</item>
+        <item>Sambung ulang tanpa batas</item>
+    </string-array>
+    <string-array name="auth_retry_type">
+        <item>Putuskan, lupakan kata sandi</item>
+        <item>Putuskan, simpan kata sandi</item>
+        <item>Abaikan, coba lagi</item>
+        <item>Coba lagi, interaktif (tidak didukung)</item>
+    </string-array>
+    <string-array name="compat_mode">
+        <item>Bawaan modern</item>
+        <item>Peer OpenVPN 2.5.x</item>
+        <item>Peer OpenVPN 2.4.x</item>
+        <item>Peer OpenVPN 2.3.x dan lebih lama</item>
+    </string-array>
+</resources>

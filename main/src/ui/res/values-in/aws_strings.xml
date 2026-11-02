@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tambahan AWSOpenVPN (Bahasa Indonesia). -->
+<resources>
+    <string name="about_aws_body">Versi modifikasi OpenVPN for Android untuk profil AWS Client VPN dengan login SAML (auth-federate): login terbuka di browser, dan VPN bisa dibatasi untuk aplikasi tertentu (Tiny Container, Termux, Tryminal, browser). Dilengkapi panduan impor dan antarmuka bahasa Indonesia.
+
+Berbasis OpenVPN for Android karya Arne Schwabe, berlisensi GNU GPL v2. Kredit dan lisensi aslinya tercantum di bawah; kode sumber perubahan ini tersedia dari pembuatnya.</string>
+    <string name="about_aws_why_title">Kenapa versi khusus, bukan aplikasi OpenVPN biasa?</string>
+    <string name="about_aws_why">Profil perusahaan memakai AWS Client VPN dengan login SAML (auth-federate). OpenVPN Connect maupun OpenVPN for Android biasa tidak bisa login dengannya, dan AWS VPN Client resmi hanya tersedia untuk Windows, macOS, dan Linux. AWSOpenVPN menambahkan yang kurang:
+• alur SAML: tantangan (CRV1), halaman login di browser, penerima lokal di 127.0.0.1:35001, lalu koneksi kedua dengan respons SAML;
+• inti OpenVPN yang di-patch agar buffernya muat token SAML ±10 KB (inti standar gagal dengan "Key Method #2 write failed");
+• IP server dikunci selama proses login (sesi SAML terikat ke server itu);
+• VPN per aplikasi, sehingga Tiny Container, Termux, Tryminal, dan browser bisa menjangkau jaringan privat.
+
+Penyedia login: AWSOpenVPN mengikuti penyedia identitas SAML 2.0 yang dipakai endpoint AWS Client VPN (Microsoft Entra ID, Okta, Google Workspace, OneLogin, JumpCloud, AWS IAM Identity Center, dan lainnya). Sejauh ini sudah diuji dengan Microsoft Entra ID; penyedia lain memakai alur yang sama tetapi belum diuji. Profil dengan sertifikat saja berjalan seperti OpenVPN biasa; login Active Directory (nama pengguna dan kata sandi) belum diuji.
+
+AWS secara resmi hanya mendukung login SAML lewat aplikasinya sendiri, jadi perubahan di sisi AWS bisa membuat aplikasi ini tidak berfungsi tanpa pemberitahuan.</string>
+    <string name="about_aws_logo_title">Tentang ikon aplikasi</string>
+    <string name="about_aws_logo">Ikon AWSOpenVPN (perisai oranye dengan lubang kunci dan awan kecil) dirancang oleh MR.TRYCATCH @ CODEMARVEL INDONESIA. Ikon ini dibuat hanya sebagai pembeda agar pengguna tidak bingung bila AWSOpenVPN dan OpenVPN for Android terpasang bersamaan. Ikon ini tidak dimaksudkan untuk menggantikan logo asli OpenVPN for Android karya Helen Beierling (tercantum di bawah), dan bukan logo OpenVPN Inc. maupun Amazon Web Services.</string>
+    <string name="about_aws_license_title">Lisensi</string>
+    <string name="about_aws_license">AWSOpenVPN adalah karya turunan OpenVPN for Android (ics-openvpn) karya Arne Schwabe, sehingga didistribusikan dengan lisensi GNU GPL versi 2 atau yang lebih baru, beserta pengecualian penautan OpenSSL dan Apache-2.0 (lihat lisensi lengkap di bawah). Siapa pun yang menerima aplikasi ini boleh memakai, mempelajari, mengubah, dan membagikannya; yang mendistribusikannya wajib juga menyediakan kode sumber lengkap, termasuk perubahan ini, serta mempertahankan pemberitahuan lisensi dan hak cipta. OpenVPN adalah merek dagang OpenVPN Inc.; AWSOpenVPN adalah proyek independen dan tidak berafiliasi dengan OpenVPN Inc., Arne Schwabe, maupun Amazon Web Services.</string>
+    <string name="app_language">Bahasa aplikasi</string>
+    <string-array name="app_language_entries">
+        <item>Ikuti sistem</item>
+        <item>English</item>
+        <item>Bahasa Indonesia</item>
+    </string-array>
+    <string name="import_guide_title">Impor profil OpenVPN</string>
+    <string name="import_guide_message">Pilih file konfigurasi OpenVPN (.ovpn atau .conf).\n\n• Profil OpenVPN standar yang berisi sertifikat, kunci, atau username/password di dalam file didukung.\n• Profil AWS Client VPN dengan login SAML (auth-federate) terdeteksi otomatis: saat menyambung, halaman login terbuka di browser dan VPN aktif setelah Anda login.\n• Secara bawaan, profil AWS hanya mengalirkan jaringan privat untuk Tiny Container, Termux, Tryminal, Chrome, dan Edge; ubah di Edit → Allowed apps (Aplikasi yang diizinkan).\n\nDi pemilih file, tekan tombol atau gerakan Kembali sistem untuk membatalkan.</string>
+    <string name="import_guide_pick">Pilih file .ovpn</string>
+</resources>

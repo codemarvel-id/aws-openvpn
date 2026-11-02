@@ -152,6 +152,8 @@ public class VpnProfile implements Serializable, Cloneable {
     public int mMssFix = 0; // -1 is default,
     public Connection[] mConnections = new Connection[0];
     public boolean mRemoteRandom = false;
+    // AWSOpenVPN: AWS Client VPN SAML (auth-federate) profile
+    public boolean mAwsSaml = false;
     public HashSet<String> mAllowedAppsVpn = new HashSet<>();
     public boolean mAllowedAppsVpnAreDisallowed = true;
     public boolean mAllowAppVpnBypass = false;
@@ -571,7 +573,10 @@ public class VpnProfile implements Serializable, Cloneable {
             cfg.append("<peer-fingerprint>\n").append(mPeerFingerPrints).append("\n</peer-fingerprint>\n");
         }
 
-        if (isUserPWAuth()) {
+        if (mAwsSaml) {
+            // the SAML challenge needs a second 'Auth' query in the same process
+            cfg.append("auth-retry interact\n");
+        } else if (isUserPWAuth()) {
             if (mAuthRetry == AUTH_RETRY_NOINTERACT)
                 cfg.append("auth-retry nointeract\n");
         }
@@ -728,7 +733,7 @@ public class VpnProfile implements Serializable, Cloneable {
         }
 
         // Obscure Settings dialog
-        if (mUseRandomHostname)
+        if (mUseRandomHostname && !mAwsSaml)
             cfg.append("#my favorite options :)\nremote-random-hostname\n");
 
         if (mUseFloat)
@@ -837,6 +842,19 @@ public class VpnProfile implements Serializable, Cloneable {
 
         String netmask = String.format(Locale.ENGLISH, "%d.%d.%d.%d", (nm & 0xff000000) >> 24, (nm & 0xff0000) >> 16, (nm & 0xff00) >> 8, nm & 0xff);
         return parts[0] + "  " + netmask;
+    }
+
+    /**
+     * AWSOpenVPN: resolve <random>.<host> once per session (like remote-random-hostname) and pin the IP,
+     * because the SAML session id is only valid on the server that issued it.
+     */
+    public void awsPinServers() throws IOException {
+        for (Connection c : mConnections) {
+            c.mPinnedServer = null;
+            if (c.mEnabled)
+                c.mPinnedServer = mUseRandomHostname ? de.blinkt.openvpn.core.AwsSamlFlow.resolvePinned(c.mServerName)
+                        : java.net.InetAddress.getByName(c.mServerName).getHostAddress();
+        }
     }
 
     public void writeConfigFileOutput(Context context, OutputStream out) throws IOException {
@@ -1217,7 +1235,7 @@ public class VpnProfile implements Serializable, Cloneable {
                 }
         }
 
-        if (isUserPWAuth() &&
+        if (isUserPWAuth() && !mAwsSaml &&
                 (TextUtils.isEmpty(mUsername) ||
                         (TextUtils.isEmpty(mPassword) && mTransientAuthPW == null))) {
             return R.string.password;

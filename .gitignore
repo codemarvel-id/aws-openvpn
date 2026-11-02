@@ -31,3 +31,11 @@ idir
 
 test.local.conf
 .kotlin
+
+# AWSOpenVPN: never commit VPN profiles or keys
+*.ovpn
+*.conf.ovpn
+*.p12
+*.pfx
+*.hprof
+local.properties

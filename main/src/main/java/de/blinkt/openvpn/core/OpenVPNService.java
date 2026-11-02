@@ -464,7 +464,7 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
 
 
         Intent intent = new Intent();
-        intent.setComponent(new ComponentName(this, getPackageName() + ".activities.MainActivity"));
+        intent.setComponent(new ComponentName(this, "de.blinkt.openvpn.activities.MainActivity"));
 
         intent.putExtra("PAGE", "graph");
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -690,6 +690,17 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
         // Write OpenVPN binary
         String[] argv = VPNLaunchHelper.buildOpenvpnArgv(this);
 
+
+        // AWSOpenVPN: AWS SAML sessions must stay on one server IP
+        if (mProfile.mAwsSaml) {
+            try {
+                mProfile.awsPinServers();
+            } catch (IOException e) {
+                VpnStatus.logError("AWS SAML: cannot resolve the VPN endpoint (" + e.getMessage() + ")");
+                endVpnService();
+                return;
+            }
+        }
 
         // Set a flag that we are starting a new VPN
         mStarting = true;
@@ -1431,6 +1442,28 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
         return intent;
     }
 
+    // AWSOpenVPN: AWS SAML login (see AwsSamlFlow)
+    void awsSamlOpenLogin(String url) {
+        trigger_sso("OPEN_URL:" + url);
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        } catch (RuntimeException e) {
+            VpnStatus.logWarning("AWS SAML: open the login from the notification (" + e.getMessage() + ")");
+        }
+    }
+
+    void awsSamlLoginReceived() {
+        NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        nm.cancel(NOTIFICATION_CHANNEL_USERREQ_ID.hashCode());
+        VpnStatus.logInfo("AWS SAML: login received, connecting");
+    }
+
+    void awsSamlLoginFailed() {
+        VpnStatus.updateStateString("AUTH_FAILED", "SAML login not received", R.string.state_auth_failed, ConnectionStatus.LEVEL_AUTH_FAILED);
+    }
+
     public void trigger_sso(String info) {
         String method = info.split(":", 2)[0];
 
@@ -1478,7 +1511,7 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
                 nbuilder.setContentText(challenge);
 
                 intent = new Intent();
-                intent.setComponent(new ComponentName(this, getPackageName() + ".activities.CredentialsPopup"));
+                intent.setComponent(new ComponentName(this, "de.blinkt.openvpn.activities.CredentialsPopup"));
 
                 intent.putExtra(EXTRA_CHALLENGE_TXT, challenge);
 

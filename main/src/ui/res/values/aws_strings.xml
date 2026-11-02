@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- AWSOpenVPN additions (English). Indonesian: values-in/aws_strings.xml -->
+<resources>
+    <string name="about_aws_author" translatable="false">AWSOpenVPN — Created by MR.TRYCATCH @ CODEMARVEL INDONESIA</string>
+    <string name="about_aws_body">A modified build of OpenVPN for Android for AWS Client VPN profiles with SAML sign-in (auth-federate): the sign-in opens in the browser, and the VPN can be limited to selected apps (Tiny Container, Termux, Tryminal, browsers). Adds an import guide and an Indonesian interface.
+
+Based on OpenVPN for Android by Arne Schwabe, licensed under the GNU GPL v2. The original credits and licences are listed below; the source code of these changes is available from the author.</string>
+    <string name="about_aws_why_title">Why a custom build instead of the stock OpenVPN apps?</string>
+    <string name="about_aws_why">The company profile uses AWS Client VPN with SAML sign-in (auth-federate). OpenVPN Connect and the regular OpenVPN for Android cannot sign in with it, and the official AWS VPN Client exists only for Windows, macOS and Linux. AWSOpenVPN adds what is missing:
+• the SAML flow: challenge (CRV1), sign-in page in the browser, local receiver on 127.0.0.1:35001, and a second connection with the SAML response;
+• a patched OpenVPN core whose buffers accept the ±10 KB SAML token (the stock core fails with "Key Method #2 write failed");
+• the server IP pinned for the whole sign-in (the SAML session belongs to that server);
+• per-app VPN, so Tiny Container, Termux, Tryminal and the browsers reach the private network.
+
+Sign-in providers: AWSOpenVPN works with whichever SAML 2.0 identity provider the AWS Client VPN endpoint uses (Microsoft Entra ID, Okta, Google Workspace, OneLogin, JumpCloud, AWS IAM Identity Center and others). So far it has been tested with Microsoft Entra ID; other providers use the same flow but are not tested yet. Profiles with certificates only work as in regular OpenVPN; Active Directory (user name and password) sign-in has not been tested.
+
+AWS officially supports SAML sign-in only in its own client, so a change on the AWS side can break this app without notice.</string>
+    <string name="about_aws_logo_title">About the app icon</string>
+    <string name="about_aws_logo">The AWSOpenVPN icon (an orange shield with a keyhole and a small cloud) was designed by MR.TRYCATCH @ CODEMARVEL INDONESIA. It exists only to tell this app apart from OpenVPN for Android when both are installed. It is not meant to replace the original OpenVPN for Android logo, designed by Helen Beierling and credited below, and it is not the logo of OpenVPN Inc. or Amazon Web Services.</string>
+    <string name="about_aws_license_title">Licence</string>
+    <string name="about_aws_license">AWSOpenVPN is a derivative work of OpenVPN for Android (ics-openvpn) by Arne Schwabe and is therefore distributed under the GNU GPL version 2 or later, with the OpenSSL and Apache-2.0 linking exceptions (see the full licences below). Anyone who receives this app may use, study, change and share it; whoever distributes it must also provide the complete source code, including these changes, and keep the licence and copyright notices. OpenVPN is a trademark of OpenVPN Inc.; AWSOpenVPN is an independent project and is not affiliated with OpenVPN Inc., Arne Schwabe or Amazon Web Services.</string>
+    <string name="app_language">App language</string>
+    <string-array name="app_language_entries">
+        <item>System default</item>
+        <item>English</item>
+        <item>Bahasa Indonesia</item>
+    </string-array>
+    <string-array name="app_language_values" translatable="false">
+        <item></item>
+        <item>en</item>
+        <item>in</item>
+    </string-array>
+    <string name="import_guide_title">Import an OpenVPN profile</string>
+    <string name="import_guide_message">Choose an OpenVPN configuration file (.ovpn or .conf).\n\n• Standard OpenVPN profiles with certificates, keys or username/password inside the file are supported.\n• AWS Client VPN profiles with SAML sign-in (auth-federate) are detected automatically: when you connect, the sign-in page opens in your browser and the VPN starts after you sign in.\n• By default an AWS profile only routes the private network for Tiny Container, Termux, Tryminal, Chrome and Edge; change it under Edit → Allowed apps.\n\nIn the file picker, use the system Back button or gesture to cancel.</string>
+    <string name="import_guide_pick">Choose .ovpn file</string>
+</resources>

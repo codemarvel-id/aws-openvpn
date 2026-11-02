@@ -14,22 +14,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="?android:attr/actionBarSize"
-            android:background="@drawable/bg_switchbar"
+            android:gravity="center_vertical"
             android:paddingStart="@dimen/switchbar_pad"
-            android:elevation="1dp"
             android:paddingEnd="@dimen/switchbar_pad"
     >
 
         <Switch
                 android:id="@+id/default_allow"
                 android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
         />
         <TextView
                 android:id="@+id/default_allow_text"
-                style="@android:style/TextAppearance.Medium.Inverse"
+                style="@android:style/TextAppearance.Medium"
+                android:layout_centerVertical="true"
                 tools:text="@string/vpn_disallow_radio"
                 android:layout_toStartOf="@id/default_allow"
                 android:layout_width="match_parent"
@@ -41,22 +42,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="?android:attr/actionBarSize"
-            android:background="@drawable/bg_switchbar"
+            android:gravity="center_vertical"
             android:paddingStart="@dimen/switchbar_pad"
-            android:elevation="1dp"
             android:paddingEnd="@dimen/switchbar_pad"
     >
 
         <Switch
                 android:id="@+id/allow_bypass"
                 android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
 
         />
         <TextView
-                style="@android:style/TextAppearance.Medium.Inverse"
+                style="@android:style/TextAppearance.Medium"
+                android:layout_centerVertical="true"
                 android:text="@string/vpn_allow_bypass"
                 android:layout_toStartOf="@id/allow_bypass"
                 android:layout_width="match_parent"

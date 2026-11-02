@@ -37,6 +37,17 @@ class GeneralSettings : PreferenceFragmentCompat(), Preference.OnPreferenceClick
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.general_settings)
+        // AWSOpenVPN: app language (system / English / Indonesian), applied by AppCompat to every screen
+        findPreference<ListPreference>("app_language")?.let { pref ->
+            pref.value = androidx.appcompat.app.AppCompatDelegate.getApplicationLocales().toLanguageTags().substringBefore('-').let { if (it == "id") "in" else it }
+            pref.setOnPreferenceChangeListener { _, value ->
+                val tag = value as String
+                androidx.appcompat.app.AppCompatDelegate.setApplicationLocales(
+                    if (tag.isEmpty()) androidx.core.os.LocaleListCompat.getEmptyLocaleList()
+                    else androidx.core.os.LocaleListCompat.forLanguageTags(tag))
+                true
+            }
+        }
         registerPermissionReceiver()
         checkForLocalNetworkAccessPermission()
 

@@ -390,7 +390,19 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener {
         }
     }
 
+    /** AWSOpenVPN: explain what can be imported (and how to cancel the system picker) before opening it. */
     private fun startImportConfigFilePicker(): Boolean {
+        val context = getActivity() ?: return true
+        AlertDialog.Builder(context)
+            .setTitle(R.string.import_guide_title)
+            .setMessage(R.string.import_guide_message)
+            .setPositiveButton(R.string.import_guide_pick) { _, _ -> openImportPicker() }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+        return true
+    }
+
+    private fun openImportPicker(): Boolean {
         var startOldFileDialog = true
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && !alwaysUseOldFileChooser(
                 getActivity()
@@ -498,8 +510,11 @@ class VPNProfileList : ListFragment(), View.OnClickListener, StateListener {
             val configuredVPN = data!!.getStringExtra(VpnProfile.EXTRA_PROFILEUUID)
 
             val profile = ProfileManager.get(getActivity(), configuredVPN)
-            profile.addChangeLogEntry("Profile edited by user")
-            ProfileManager.saveProfile(getActivity(), profile)
+            // AWSOpenVPN: never crash the list when the editor returned no/unknown profile id
+            if (profile != null) {
+                profile.addChangeLogEntry("Profile edited by user")
+                ProfileManager.saveProfile(getActivity(), profile)
+            }
             // Name could be modified, reset List adapter
             setListAdapter()
         } else if (requestCode == SELECT_PROFILE) {

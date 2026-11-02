@@ -25,6 +25,62 @@
                 tools:ignore="SelectableText"
                 tools:text="OpenVPN for Android 1.2.3" />
 
+        <!-- AWSOpenVPN credit (the original OpenVPN for Android credits and licences below stay unchanged, as GPLv2 requires) -->
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12sp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold"
+                android:text="@string/about_aws_author" />
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4sp"
+                android:autoLink="all"
+                android:text="@string/about_aws_body" />
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12sp"
+                android:textStyle="bold"
+                android:text="@string/about_aws_why_title" />
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4sp"
+                android:text="@string/about_aws_why" />
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12sp"
+                android:textStyle="bold"
+                android:text="@string/about_aws_logo_title" />
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4sp"
+                android:text="@string/about_aws_logo" />
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12sp"
+                android:textStyle="bold"
+                android:text="@string/about_aws_license_title" />
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4sp"
+                android:autoLink="all"
+                android:text="@string/about_aws_license" />
+
 
         <TextView
                 android:layout_width="match_parent"

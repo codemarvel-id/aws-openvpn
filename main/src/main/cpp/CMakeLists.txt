@@ -41,7 +41,9 @@ endif()
 
     # Super hacky way to determine flavour
 #-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=/Users/arne/software/icsopenvpn/main/build/intermediates/cmake/normal/debug/obj/arm64-v8a
-if (NOT ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} MATCHES "build/intermediates/cmake/.*skeleton.*/")
+# AWSOpenVPN: -DAWSOPENVPN_NO_OVPN3=ON builds only the OpenVPN 2 engine (no SWIG needed)
+OPTION(AWSOPENVPN_NO_OVPN3 "Skip the OpenVPN 3 library" OFF)
+if (NOT AWSOPENVPN_NO_OVPN3 AND NOT ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} MATCHES "build/intermediates/cmake/.*skeleton.*/")
     FIND_PACKAGE(SWIG 3.0 REQUIRED)
 
     add_custom_command(OUTPUT "ovpncli_wrap.cxx"

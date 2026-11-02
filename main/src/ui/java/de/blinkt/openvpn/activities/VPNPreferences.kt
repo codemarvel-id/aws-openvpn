@@ -109,6 +109,8 @@ class VPNPreferences : BaseActivity(), VpnStatus.ProfileNotifyListener {
         setUpEdgeEdgeInsetsListener(rootview, R.id.root_linear_layout)
 
         disableToolbarElevation()
+        // AWSOpenVPN: a back arrow in the toolbar (the menu only had delete/duplicate)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = rootview.findViewById(R.id.pager)
@@ -142,7 +144,9 @@ class VPNPreferences : BaseActivity(), VpnStatus.ProfileNotifyListener {
         //TabBarView tabs = (TabBarView) findViewById(R.id.sliding_tabs);
         //tabs.setViewPager(mPager);
 
-        TabLayoutMediator(tablayout, mPager) { tab, position ->
+        // AWSOpenVPN: jump straight to a tab (smoothScroll=false) instead of scrolling through every page in between,
+        // which half-rendered the heavy settings pages while "Allowed apps" was loading.
+        TabLayoutMediator(tablayout, mPager, true, false) { tab, position ->
             tab.text = mPagerAdapter.getPageTitle(position)
         }.attach()
 
@@ -150,12 +154,22 @@ class VPNPreferences : BaseActivity(), VpnStatus.ProfileNotifyListener {
     }
 
 
+    /** AWSOpenVPN: the profile list reads VpnProfile.EXTRA_PROFILEUUID ("de.blinkt.openvpn.profileUUID"), but this activity's own
+     *  intent carries "<applicationId>.profileUUID"; returning that intent (the original code) gave the list a null profile
+     *  and crashed it once the applicationId changed. Always return the fixed key. */
+    private fun editResult(): Intent = Intent().putExtra(VpnProfile.EXTRA_PROFILEUUID, mProfileUUID)
+
     override fun onBackPressed() {
-        setResult(RESULT_OK, intent)
+        setResult(RESULT_OK, editResult())
         super.onBackPressed()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            setResult(RESULT_OK, editResult())
+            finish()
+            return true
+        }
         if (item.itemId == R.id.remove_vpn) askProfileRemoval()
         if (item.itemId == R.id.duplicate_vpn) {
             val data = Intent()

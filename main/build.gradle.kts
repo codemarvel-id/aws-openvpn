@@ -36,11 +36,15 @@ android {
         minSdk = 23
         targetSdk = 37
         //targetSdkPreview = "UpsideDownCake"
-        versionCode = 225
-        versionName = "0.7.69"
+        // AWSOpenVPN: own package so it installs next to OpenVPN for Android
+        applicationId = "id.tryca.awsopenvpn"
+        versionCode = 8
+        versionName = "0.2.3-ics0.7.69"
         externalNativeBuild {
             cmake {
                 //arguments+= "-DCMAKE_VERBOSE_MAKEFILE=1"
+                // AWSOpenVPN: OpenVPN 2 only (the AWS SAML patch is in OpenVPN 2); -PwithOvpn3 restores OpenVPN 3
+                if (!project.hasProperty("withOvpn3")) arguments += "-DAWSOPENVPN_NO_OVPN3=ON"
             }
         }
     }
@@ -60,7 +64,10 @@ android {
             assets.directories.add("build/ovpnassets")
         }
 
-        create("ui") {}
+        create("ui") {
+            // AWSOpenVPN: OpenVPNThreadv3 (moved to src/ovpn3) needs the SWIG-generated OpenVPN 3 classes
+            if (project.hasProperty("withOvpn3")) java.directories.add("src/ovpn3/java")
+        }
 
         create("skeleton") {}
 
@@ -259,6 +266,7 @@ fun registerGenSwigTask(variantName: String, variantDirName: String): TaskProvid
 
 androidComponents {
     onVariants(selector().all()) { variant ->
+        if (!project.hasProperty("withOvpn3")) return@onVariants
         val execTask = registerGenSwigTask(variant.name, variant.name.replace("-", "/"))
         variant.sources.java?.addGeneratedSourceDirectory(execTask, GenerateSwigTask::outputDir)
     }

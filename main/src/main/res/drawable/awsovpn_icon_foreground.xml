@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- AWSOpenVPN launcher icon foreground: orange shield with keyhole and a small cloud (branding/a_shield.svg). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
+    <path android:pathData="M41,36a9,9 0,0 1,14 -6a11,11 0,0 1,19 4a7,7 0,0 1,1 14"
+        android:strokeColor="#D99FD4FF" android:strokeWidth="2.4" android:strokeLineCap="round"/>
+    <path android:pathData="M54,33L74,40V55C74,67 65,75 54,79C43,75 34,67 34,55V40Z"
+        android:strokeWidth="4.5" android:strokeLineJoin="round">
+        <aapt:attr name="android:strokeColor">
+            <gradient android:type="linear" android:startX="54" android:startY="33" android:endX="54" android:endY="79">
+                <item android:offset="0" android:color="#FFFFB84D"/>
+                <item android:offset="1" android:color="#FFFF8A00"/>
+            </gradient>
+        </aapt:attr>
+    </path>
+    <path android:pathData="M49,53a5,5 0,1 0,10 0a5,5 0,1 0,-10 0zM51.6,56h4.8l1.6,10h-8z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="linear" android:startX="54" android:startY="48" android:endX="54" android:endY="66">
+                <item android:offset="0" android:color="#FFFFB84D"/>
+                <item android:offset="1" android:color="#FFFF8A00"/>
+            </gradient>
+        </aapt:attr>
+    </path>
+</vector>

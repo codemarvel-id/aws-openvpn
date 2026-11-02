@@ -1,0 +1,15 @@
+#!/bin/sh
+# vpn-dns on <resolver-ip> | off | status — point Tiny Container's DNS at your VPC resolver while AWSOpenVPN is connected.
+# "on" keeps a public resolver as fallback; "off" restores the saved original. (AWSOpenVPN, MR.TRYCATCH @ CODEMARVEL INDONESIA)
+# The resolver is usually the VPC network address + 2 (e.g. for a 10.0.0.0/16 VPC: 10.0.0.2). It can also come from $VPC_DNS.
+VPC_DNS=${2:-${VPC_DNS:-}}
+R=/etc/resolv.conf; B=$HOME/.config/awsopenvpn/resolv.conf.orig
+SUDO=; [ -w "$R" ] || SUDO=sudo
+case "$1" in
+  on)  [ -n "$VPC_DNS" ] || { echo "usage: vpn-dns on <vpc-resolver-ip>   (or set VPC_DNS)"; exit 1; }
+       mkdir -p "$(dirname "$B")"; grep -q "^nameserver $VPC_DNS" "$R" || cp "$R" "$B"
+       printf '# set by vpn-dns on (original: %s)\nnameserver %s\nnameserver 8.8.8.8\noptions timeout:2 attempts:1\n' "$B" "$VPC_DNS" | $SUDO tee "$R" >/dev/null
+       echo "DNS -> $VPC_DNS (fallback 8.8.8.8). Turn off with: vpn-dns off" ;;
+  off) if [ -f "$B" ]; then $SUDO cp "$B" "$R"; echo "DNS restored"; else echo "nothing to restore"; fi ;;
+  *)   grep '^nameserver' "$R" ;;
+esac

@@ -19,6 +19,8 @@ public class Connection implements Serializable, Cloneable {
     public String mCustomConfiguration = "";
     public boolean mUseCustomConfig = false;
     public boolean mEnabled = true;
+    // AWSOpenVPN: server IP pinned for one AWS SAML session (not saved)
+    public transient String mPinnedServer;
     public int mConnectTimeout = 0;
     public static final int CONNECTION_DEFAULT_TIMEOUT = 120;
     public ProxyType mProxyType = ProxyType.NONE;
@@ -44,7 +46,7 @@ public class Connection implements Serializable, Cloneable {
 
         // Server Address
         cfg += "remote ";
-        cfg += mServerName;
+        cfg += (mPinnedServer != null) ? mPinnedServer : mServerName;
         cfg += " ";
         cfg += mServerPort;
         if (mUseUdp)

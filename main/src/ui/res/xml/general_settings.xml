@@ -8,6 +8,13 @@
     <PreferenceCategory
             android:key="app_behaviour"
             android:title="@string/appbehaviour">
+        <ListPreference
+                android:key="app_language"
+                android:defaultValue=""
+                android:entries="@array/app_language_entries"
+                android:entryValues="@array/app_language_values"
+                android:title="@string/app_language"
+                android:summary="%s" />
         <CheckBoxPreference
                 android:defaultValue="true"
                 android:key="showlogwindow"

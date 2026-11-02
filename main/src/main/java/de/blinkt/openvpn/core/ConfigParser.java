@@ -809,6 +809,21 @@ public class ConfigParser {
         if (ocusername != null && ocusername.size() > 1)
             np.mUsername = ocusername.get(1);
 
+        // AWSOpenVPN: AWS Client VPN SAML profile
+        if (options.containsKey("auth-federate")) {
+            options.remove("auth-federate");
+            np.mAwsSaml = true;
+            np.mAuthRetry = VpnProfile.AUTH_RETRY_INTERACT;
+            // only the Linux/terminal apps and the browsers use the tunnel by default
+            np.mAllowedAppsVpnAreDisallowed = false;
+            np.mAllowedAppsVpn.clear();
+            np.mAllowedAppsVpn.add("com.fct.tc4");
+            np.mAllowedAppsVpn.add("com.termux");
+            np.mAllowedAppsVpn.add("id.tryca.mateterminal");
+            // browsers too, so internal web apps on the private network open; SSO login still works (no tunnel yet, callback on 127.0.0.1, split routes)
+            np.mAllowedAppsVpn.add("com.android.chrome");
+            np.mAllowedAppsVpn.add("com.microsoft.emmx");
+        }
         checkIgnoreAndInvalidOptions(np);
         fixup(np);
 
